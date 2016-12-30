@@ -1,0 +1,16 @@
+[
+{
+  "modid": "memorybar",
+  "name": "Memory Bar",
+  "description": "Adds the splash screen memory bar to the F3 screen, and with a hotkey to the ingame HUD",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Henry Loenwind"],
+  "credits": "Thx to mezz for the base code. (Used with permission)",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
