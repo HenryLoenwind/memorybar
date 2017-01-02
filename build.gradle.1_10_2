@@ -21,7 +21,7 @@ plugins {
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-ext.minecraft_version = "1.11.2"
+ext.minecraft_version = "1.10.2"
 ext.raw_version = "1.0." + System.getenv('BUILD_NUMBER')
 version = minecraft_version + "_" + raw_version
 group= "info.loenwind.memorybar"
@@ -31,9 +31,9 @@ sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
 minecraft {
-    version = minecraft_version + "-13.20.0.2201"
+    version = minecraft_version + "-12.18.2.2122"
     runDir = "run"
-    mappings = "snapshot_20161227"
+    mappings = "snapshot_20160518"
 }
 
 dependencies {
@@ -68,6 +68,13 @@ compileJava.doFirst {
     modFileFile.write(contents, 'UTF-8')
 }
 
+jar.doFirst {
+    File lang = new File(projectDir, 'build/resources/main/assets/memorybar/lang/en_us.lang')
+    File langtmp = new File(projectDir, 'build/resources/main/assets/memorybar/lang/tmp')
+    lang.renameTo(langtmp)
+    langtmp = new File(projectDir, 'build/resources/main/assets/memorybar/lang/tmp')
+    langtmp.renameTo(new File(projectDir, 'build/resources/main/assets/memorybar/lang/en_US.lang'))
+}
 jar {
     destinationDir = file 'dist'
     includeEmptyDirs = false
