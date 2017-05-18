@@ -15,6 +15,7 @@ import static org.lwjgl.opengl.GL11.glVertex2f;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 
 /**
  * Code adapted from splash screen code by mezz. Thanks to mezz for giving permission to copy it.
@@ -25,6 +26,9 @@ public class MemoryPainter {
   private static int getHex(String name, int def) {
     return def;
   }
+
+  private static final long PEAK_FAST = 5 * 1_000;
+  private static final long PEAK_SLOW = 60 * 1_000;
 
   private static int fontColor = getHex("font", 0xFF000000);
   private static int barBorderColor = getHex("barBorder", 0xFFC0C0C0);
@@ -39,6 +43,14 @@ public class MemoryPainter {
 
   private static float memoryColorPercent;
   private static long memoryColorChangeTime;
+
+  private static int memoryFastPeak;
+  private static int memoryFastPeakColor;
+  private static long memoryFastPeakChangeTime;
+
+  private static int memoryPeak;
+  private static int memoryPeakColor;
+  private static long memoryPeakChangeTime;
 
   public static void drawMemoryBar(int width) {
     int maxMemory = bytesToMb(Runtime.getRuntime().maxMemory());
@@ -59,6 +71,9 @@ public class MemoryPainter {
       xOffset = width / 2;
       yOffset = 10;
       bgTransparency = 0xFFFFFFFF;
+      GlStateManager.disableBlend();
+    } else {
+      GlStateManager.enableBlend();
     }
 
     long time = System.currentTimeMillis();
@@ -74,6 +89,18 @@ public class MemoryPainter {
       memoryBarColor = memoryWarnColor;
     } else {
       memoryBarColor = memoryLowColor;
+    }
+
+    if (usedMemory > memoryFastPeak || memoryFastPeakChangeTime < time) {
+      memoryFastPeak = usedMemory;
+      memoryFastPeakChangeTime = time + PEAK_FAST;
+      memoryFastPeakColor = memoryBarColor;
+    }
+
+    if (usedMemory > memoryPeak || memoryPeakChangeTime < time) {
+      memoryPeak = usedMemory;
+      memoryPeakChangeTime = time + PEAK_SLOW;
+      memoryPeakColor = memoryBarColor;
     }
 
     glPushMatrix();
@@ -99,16 +126,31 @@ public class MemoryPainter {
       glPopMatrix();
     }
 
-    // slidy part
-    glPushMatrix();
-    setColor(memoryLowColor);
-    glTranslatef((actualBarWidth - 2) * (totalMemory) / (maxMemory) - 2, 0, 0);
-    drawBox(1, barHeight - 2);
-    glPopMatrix();
-
     // bar
     setColor(memoryBarColor);
     drawBox((actualBarWidth - 2) * (usedMemory) / (maxMemory), barHeight - 2);
+
+    // slidy part (green, max use fast)
+    glPushMatrix();
+    setColor(memoryFastPeakColor);
+    glTranslatef((actualBarWidth - 2) * (memoryFastPeak) / (maxMemory), 0, 0);
+    drawBox(1, barHeight - 2 + 10);
+    glPopMatrix();
+
+    // slidy part (yellow, max use)
+    glPushMatrix();
+    setColor(memoryPeakColor);
+    glTranslatef((actualBarWidth - 2) * (memoryPeak) / (maxMemory), 0, 0);
+    drawBox(1, barHeight - 2 + 20);
+    glPopMatrix();
+
+    // slidy part (red, max allocation)
+    glPushMatrix();
+    setColor(memoryLowColor);
+    glTranslatef((actualBarWidth - 2) * (totalMemory) / (maxMemory) - 2, 0, 0);
+    drawBox(1, barHeight - 2 + 30);
+    glPopMatrix();
+
     glPopMatrix();
 
     // progress text
