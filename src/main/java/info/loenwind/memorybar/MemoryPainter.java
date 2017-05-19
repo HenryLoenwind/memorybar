@@ -134,21 +134,21 @@ public class MemoryPainter {
     glPushMatrix();
     setColor(memoryFastPeakColor);
     glTranslatef((actualBarWidth - 2) * (memoryFastPeak) / (maxMemory), 0, 0);
-    drawBox(1, barHeight - 2 + 10);
+    drawBox(1, barHeight - 2);
     glPopMatrix();
 
     // slidy part (yellow, max use)
     glPushMatrix();
     setColor(memoryPeakColor);
     glTranslatef((actualBarWidth - 2) * (memoryPeak) / (maxMemory), 0, 0);
-    drawBox(1, barHeight - 2 + 20);
+    drawBox(1, barHeight - 2);
     glPopMatrix();
 
     // slidy part (red, max allocation)
     glPushMatrix();
     setColor(memoryLowColor);
     glTranslatef((actualBarWidth - 2) * (totalMemory) / (maxMemory) - 2, 0, 0);
-    drawBox(1, barHeight - 2 + 30);
+    drawBox(1, barHeight - 2);
     glPopMatrix();
 
     glPopMatrix();
