@@ -11,7 +11,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
     }
 }
 
@@ -21,7 +21,7 @@ plugins {
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-ext.minecraft_version = "1.12.2"
+ext.minecraft_version = "1.11.2"
 ext.raw_version = "1.0." + System.getenv('BUILD_NUMBER')
 version = minecraft_version + "_" + raw_version
 group= "info.loenwind.memorybar"
@@ -31,7 +31,7 @@ sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
 minecraft {
-    version = minecraft_version + "-14.23.1.2582"
+    version = minecraft_version + "-13.20.0.2201"
     runDir = "run"
     mappings = "snapshot_20161227"
 }
